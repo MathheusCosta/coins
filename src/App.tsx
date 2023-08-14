@@ -1,9 +1,7 @@
+import Home from "./screens/Home";
+
 function App() {
-  return (
-    <div>
-      <h1 className="text-3xl">Hello world!</h1>
-    </div>
-  );
+  return <Home />;
 }
 
 export default App;
