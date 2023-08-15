@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import logo from "../../assets/logo.png";
 import { Combobox } from "@/components/ui/combobox";
 import { COINS } from "@/enums";
+import { Input } from "@/components/ui/input"
+import { DatePicker } from "@/components/ui/datePicker";
 
 export default function Home() {
   return (
@@ -11,8 +13,10 @@ export default function Home() {
           <img src={logo} alt="Logo" className="w-20 " />
         </div>
 
-        <form>
-          <Combobox options={COINS} />
+        <form className="flex flex-col gap-4 w-72">
+          <Combobox options={COINS}/>
+          <Input className="text-black" placeholder="Digite seu valor"></Input>
+          <DatePicker/>
           <Button>Buscar</Button>
         </form>
       </div>
