@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import logo from "../../assets/logo.png";
 import { Combobox } from "@/components/ui/combobox";
 import { COINS } from "@/enums";
-import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/ui/datePicker";
 
 export default function Home() {
@@ -14,9 +14,13 @@ export default function Home() {
         </div>
 
         <form className="flex flex-col gap-4 w-72">
-          <Combobox options={COINS}/>
-          <Input className="text-black" placeholder="Digite seu valor"></Input>
-          <DatePicker/>
+          <Combobox options={COINS} />
+          <Input
+            className="text-black"
+            type="number"
+            placeholder="Digite seu valor"
+          ></Input>
+          <DatePicker />
           <Button>Buscar</Button>
         </form>
       </div>
