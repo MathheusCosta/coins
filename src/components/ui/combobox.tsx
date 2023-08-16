@@ -16,14 +16,19 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Option } from "@/types";
+import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 
 interface Props {
   options: Option[];
+  register: UseFormRegister<any>;
+  name: string;
+  setValue: UseFormSetValue<any>;
+  value: string;
 }
 
-export function Combobox({ options }: Props) {
+export function Combobox({ options, register, name, setValue, value }: Props) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -40,18 +45,20 @@ export function Combobox({ options }: Props) {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[var(--radix-popper-anchor-width)] p-0 ">
-        <Command>
+        <Command id={name}>
           <CommandInput placeholder="Search framework..." />
           <CommandEmpty>No framework found.</CommandEmpty>
           <CommandGroup>
             {options.map((option) => (
               <CommandItem
                 key={option.value}
+                id={name}
                 value={option.value}
                 onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue);
+                  setValue(name, currentValue === value ? "" : currentValue);
                   setOpen(false);
                 }}
+                {...register(name)}
               >
                 <Check
                   className={cn(
