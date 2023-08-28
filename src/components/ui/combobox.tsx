@@ -46,16 +46,16 @@ export function Combobox({ options, register, name, setValue, value }: Props) {
       </PopoverTrigger>
       <PopoverContent className="w-[var(--radix-popper-anchor-width)] p-0 ">
         <Command id={name}>
-          <CommandInput placeholder="Search framework..." />
-          <CommandEmpty>No framework found.</CommandEmpty>
+          <CommandInput placeholder="Digite uma moeda..." />
+          <CommandEmpty>Nenhuma moeda encontrada.</CommandEmpty>
           <CommandGroup>
             {options.map((option) => (
               <CommandItem
                 key={option.value}
                 id={name}
-                value={option.value}
-                onSelect={(currentValue) => {
-                  setValue(name, currentValue === value ? "" : currentValue);
+                value={option.label}
+                onSelect={() => {
+                  setValue(name, option.value);
                   setOpen(false);
                 }}
                 {...register(name)}

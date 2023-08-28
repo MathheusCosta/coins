@@ -10,14 +10,18 @@ import logo from "../../assets/logo.png";
 
 export type Inputs = {
   coins: string;
-  value: number;
+  amount: string;
   date: string;
 };
 
 export default function Home() {
   const { register, handleSubmit, setValue, watch } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = (data) =>
+    console.log({
+      ...data,
+      amount: parseFloat(data.amount),
+    });
   const coins = watch("coins");
 
   return (
@@ -39,9 +43,11 @@ export default function Home() {
             value={coins}
           />
           <Input
-            className="text-black"
             type="number"
+            name="amount"
+            className="text-black"
             placeholder="Digite seu valor"
+            register={register}
           ></Input>
           <DatePicker />
           <Button type="submit">Buscar</Button>
