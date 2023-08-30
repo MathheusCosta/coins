@@ -11,7 +11,7 @@ import logo from "../../assets/logo.png";
 export type Inputs = {
   coins: string;
   amount: string;
-  date: string;
+  date: Date;
 };
 
 export default function Home() {
@@ -23,6 +23,8 @@ export default function Home() {
       amount: parseFloat(data.amount),
     });
   const coins = watch("coins");
+
+  const date = watch("date");
 
   return (
     <main className="flex flex-row">
@@ -49,7 +51,13 @@ export default function Home() {
             placeholder="Digite seu valor"
             register={register}
           ></Input>
-          <DatePicker />
+          <DatePicker
+            value={date}
+            name="date"
+            register={register}
+            setValue={setValue}
+          />
+
           <Button type="submit">Buscar</Button>
         </form>
       </div>
