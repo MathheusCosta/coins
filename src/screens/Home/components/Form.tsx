@@ -5,6 +5,7 @@ import { Combobox } from "@/components/ui/combobox";
 import { COINS } from "@/enums";
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/ui/datePicker";
+import { getCurrency } from "@/api/currency";
 
 export type Inputs = {
   coins: string;
@@ -13,13 +14,32 @@ export type Inputs = {
 };
 
 const Form = () => {
-  const { register, handleSubmit, setValue, watch } = useForm<Inputs>();
+  const { register, handleSubmit, setValue, watch } = useForm<Inputs>({
+    defaultValues: {
+      date: new Date(),
+    },
+  });
 
-  const onSubmit: SubmitHandler<Inputs> = (data) =>
-    console.log({
-      ...data,
-      amount: parseFloat(data.amount),
-    });
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const { coins, date } = data;
+
+    if (!coins) {
+      console.log("Nenhuma moeda selecionada");
+      return;
+    }
+
+    const formattedDate = date.toISOString().split("T")[0];
+
+    try {
+      const currencyResponse = await getCurrency({
+        coins,
+        date: formattedDate,
+      });
+      console.log(currencyResponse);
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
 
   const coins = watch("coins");
 
