@@ -15,7 +15,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Option } from "@/types";
+import { Option } from "@/utils/types";
 import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 
 interface Props {

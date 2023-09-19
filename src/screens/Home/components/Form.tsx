@@ -2,10 +2,12 @@ import { useForm, SubmitHandler } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
-import { COINS } from "@/enums";
+import { COINS } from "@/utils/enums";
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/ui/datePicker";
 import { getCurrency } from "@/api/currency";
+import { useCurrencyStore } from "@/stores/currency.store";
+import { convertToTableItemDTO } from "@/utils/dto/convertToTableItem";
 
 export type Inputs = {
   coins: string;
@@ -14,6 +16,8 @@ export type Inputs = {
 };
 
 const Form = () => {
+  const { setCurrencyTableData } = useCurrencyStore((state) => state);
+
   const { register, handleSubmit, setValue, watch } = useForm<Inputs>({
     defaultValues: {
       date: new Date(),
@@ -21,7 +25,7 @@ const Form = () => {
   });
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const { coins, date } = data;
+    const { coins, amount, date } = data;
 
     if (!coins) {
       console.log("Nenhuma moeda selecionada");
@@ -35,7 +39,10 @@ const Form = () => {
         coins,
         date: formattedDate,
       });
-      console.log(currencyResponse);
+
+      const result = convertToTableItemDTO(currencyResponse, coins, amount);
+
+      setCurrencyTableData(result);
     } catch (error: any) {
       console.log(error.message);
     }
