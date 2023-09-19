@@ -7,7 +7,9 @@ interface GetParamsProps {
 
 export const getCurrency = async ({ date, coins }: GetParamsProps) => {
   try {
-    const response = await request.get(`/${date}/currencies/${coins}.json`);
+    const response = await request.get<GetCurrencyAPIResponse>(
+      `/${date}/currencies/${coins}.json`
+    );
 
     return response.data;
   } catch (error) {
