@@ -1,5 +1,8 @@
 import { useForm, SubmitHandler } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+import { Form as FormUi } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
 import { COINS } from "@/utils/enums";
@@ -9,22 +12,31 @@ import { getCurrency } from "@/api/currency";
 import { useCurrencyStore } from "@/stores/currency.store";
 import { convertToTableItemDTO } from "@/utils/dto/convertToTableItem";
 
-export type Inputs = {
-  coins: string;
-  amount: string;
-  date: Date;
-};
+const getCurrencySchema = z.object({
+  coins: z.string({ required_error: "Campo obrigatório" }),
+  amount: z.number().positive("Campo precisa ser maior que 0"),
+  date: z.date({
+    invalid_type_error: "Tipo inválido",
+    required_error: "Campo obrigatório",
+  }),
+});
+
+export type GetCurrencySchema = z.infer<typeof getCurrencySchema>;
 
 const Form = () => {
   const { setCurrencyTableData } = useCurrencyStore((state) => state);
 
-  const { register, handleSubmit, setValue, watch } = useForm<Inputs>({
+  const form = useForm<GetCurrencySchema>({
     defaultValues: {
-      date: new Date(),
+      amount: 1,
     },
+    resolver: zodResolver(getCurrencySchema),
   });
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const { register, handleSubmit, setValue, formState, control, trigger } =
+    form;
+
+  const onSubmit: SubmitHandler<GetCurrencySchema> = async (data) => {
     const { coins, amount, date } = data;
 
     if (!coins) {
@@ -48,38 +60,39 @@ const Form = () => {
     }
   };
 
-  const coins = watch("coins");
-
-  const date = watch("date");
-
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-4 w-72"
-    >
-      <Combobox
-        options={COINS}
-        register={register}
-        name="coins"
-        setValue={setValue}
-        value={coins}
-      />
-      <Input
-        type="number"
-        name="amount"
-        className="text-black"
-        placeholder="Digite seu valor"
-        register={register}
-      ></Input>
-      <DatePicker
-        value={date}
-        name="date"
-        register={register}
-        setValue={setValue}
-      />
+    <FormUi {...form}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-4 w-72"
+      >
+        <Combobox
+          options={COINS}
+          register={register}
+          name="coins"
+          setValue={setValue}
+          control={control}
+          trigger={trigger}
+        />
+        <Input
+          type="number"
+          name="amount"
+          className="text-black"
+          placeholder="Digite seu valor"
+          register={register}
+          error={formState.errors.amount?.message}
+        ></Input>
+        <DatePicker
+          name="date"
+          register={register}
+          setValue={setValue}
+          control={control}
+          trigger={trigger}
+        />
 
-      <Button type="submit">Buscar</Button>
-    </form>
+        <Button type="submit">Buscar</Button>
+      </form>
+    </FormUi>
   );
 };
 

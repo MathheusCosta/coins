@@ -6,7 +6,7 @@ type CoinsNameKey = keyof typeof CoinsName;
 export const convertToTableItemDTO = (
   value: GetCurrencyAPIResponse,
   coin: string,
-  coinValue: string
+  coinValue: number
 ): TableItem[] => {
   return Object.entries(value[coin])
     .filter(([key]) => COINS.find((c) => c.value === key))
@@ -16,7 +16,7 @@ export const convertToTableItemDTO = (
       symbol: key.toUpperCase(),
       value: parseFloat(value.toFixed(2)),
       convertedValue: coinValue
-        ? parseFloat((parseFloat(coinValue) * value).toFixed(2))
+        ? parseFloat((coinValue * value).toFixed(2))
         : 1,
     }));
 };
