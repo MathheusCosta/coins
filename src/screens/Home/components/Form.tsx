@@ -28,21 +28,13 @@ const Form = () => {
 
   const form = useForm<GetCurrencySchema>({
     defaultValues: {
-      date: new Date(),
       amount: 1,
     },
     resolver: zodResolver(getCurrencySchema),
   });
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState,
-    control,
-    trigger,
-  } = form;
+  const { register, handleSubmit, setValue, formState, control, trigger } =
+    form;
 
   const onSubmit: SubmitHandler<GetCurrencySchema> = async (data) => {
     const { coins, amount, date } = data;
@@ -68,8 +60,6 @@ const Form = () => {
     }
   };
 
-  const date = watch("date");
-
   return (
     <FormUi {...form}>
       <form
@@ -93,11 +83,11 @@ const Form = () => {
           error={formState.errors.amount?.message}
         ></Input>
         <DatePicker
-          value={date}
           name="date"
           register={register}
           setValue={setValue}
-          error={formState.errors.date?.message}
+          control={control}
+          trigger={trigger}
         />
 
         <Button type="submit">Buscar</Button>

@@ -29,7 +29,6 @@ interface Props {
   register: UseFormRegister<any>;
   name: string;
   setValue: UseFormSetValue<any>;
-  error?: string;
   control: Control<any>;
   trigger: UseFormTrigger<any>;
 }
