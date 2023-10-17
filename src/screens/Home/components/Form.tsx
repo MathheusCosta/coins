@@ -11,6 +11,7 @@ import { DatePicker } from "@/components/ui/datePicker";
 import { getCurrency } from "@/api/currency";
 import { useCurrencyStore } from "@/stores/currency.store";
 import { convertToTableItemDTO } from "@/utils/dto/convertToTableItem";
+import toast from "react-hot-toast";
 
 const getCurrencySchema = z.object({
   coins: z.string({ required_error: "Campo obrigatório" }),
@@ -47,10 +48,17 @@ const Form = () => {
     const formattedDate = date.toISOString().split("T")[0];
 
     try {
-      const currencyResponse = await getCurrency({
-        coins,
-        date: formattedDate,
-      });
+      const currencyResponse = await toast.promise(
+        getCurrency({
+          coins,
+          date: formattedDate,
+        }),
+        {
+          loading: "Buscando informações...",
+          success: <b>Sucesso!</b>,
+          error: <b>Erro ao buscar informações.</b>,
+        }
+      );
 
       const result = convertToTableItemDTO(currencyResponse, coins, amount);
 
@@ -77,7 +85,6 @@ const Form = () => {
         <Input
           type="number"
           name="amount"
-          className="text-black"
           placeholder="Digite seu valor"
           register={register}
           error={formState.errors.amount?.message}
